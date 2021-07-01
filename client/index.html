@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+TRES - an Uno clone
+Made by Jieruei Chang 2021
+___________
+Landing page of website; choose either to create a game
+or join existing game.
+-->
+<html>
+    <head>
+        <title>Tres</title>
+
+        <link rel=stylesheet href=style.css>
+        <link rel=icon href=assets/logo.png>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src=constants.js></script>
+    </head>
+    <body>
+        <div id=container>
+            <h1>TRES</h1>
+            <h2 class=info>The classic online Uno ripoff</h2>
+            <h2><a href=rules.html>View Rules</a></h2>
+            <div class=box id=div-name>
+                <h3>Please enter your name</h3>
+                <input id=player-name>
+            </div>
+            <div id=div-wrapper>
+                <div class=box id=div-start-game>
+                    <h2>NEW GAME</h2>
+                    <button onclick="createGame()">CREATE</button>
+                </div>
+                <div class=box id=div-join-game>
+                    <h2>JOIN GAME</h2>
+                    <h3>Enter join code</h3>
+                    <input id=join-game>
+                    <br>
+                    <button onclick="joinGame()">JOIN</button>
+                </div>
+            </div>
+            <h2 class=info>By Jieruei Chang 2021</h2>
+        </div>
+        <script>
+            function redirect(data){
+                let id = data["id"];
+                let game = data["game"];
+                location.href = `lobby.html?id=${id}&game=${game}`;                    
+            }
+
+            function createGame(){
+                $.post(SERVERURL+"create",JSON.stringify({
+                    name:$("#player-name").val(),
+                }),redirect);
+            }
+
+            function joinGame(){
+                $.post(SERVERURL+"join",JSON.stringify({
+                    name:$("#player-name").val(),
+                    game:$("#join-game").val()
+                }),redirect);
+            }
+        </script>
+    </body>
+</html>

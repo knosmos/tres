@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+Waiting room. View currently joined players,
+add AI players, start game once ready.
+-->
+<html>
+    <head>
+        <title>Tres</title>
+
+        <link rel=stylesheet href=style.css>
+        <link rel=icon href=assets/logo.png>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src=constants.js></script>
+    </head>
+    <body>
+        <div id=container>
+            <h1>TRES</h1>
+            <h2 class=info>Waiting to start...</h2>
+            <div class=box>
+                <h2>JOIN CODE: <span id="game-id"></span></h2>
+            </div>
+            <div id=div-wrapper>
+                <div class=box>
+                    <h2>CONNECTED PLAYERS</h2>
+                    <ul id="players">
+                    </ul>
+                </div>
+                <div class=box>
+                    <button onclick="addAI()">ADD AI PLAYER</button>
+                    <br>
+                    <button onclick="startGame()">START GAME</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Get query string parameters (https://stackoverflow.com/questions/901115)
+            let urlParams = new URLSearchParams(window.location.search);
+            let game = urlParams.get("game");
+            let id = urlParams.get("id");
+
+            // Display game ID
+            $("#game-id").html(game);
+
+            /*
+            Add an AI player to the game
+            */
+            function addAI(){
+                $.post(SERVERURL+"addAI",JSON.stringify({
+                    game:game,
+                }),getPlayers);
+            }
+
+            /*
+            Start the game
+            */
+            function startGame(){
+                $.post(SERVERURL+"start",JSON.stringify({
+                    game:game,
+                }),getPlayers);
+            }
+
+            /*
+            This gets all names of all the players
+            currently connected to the game. It also
+            checks if the game has started yet; if it has,
+            it redirects the user to the game page.
+            */
+            function getPlayers(){
+                $.get(SERVERURL+"lobby?game="+game,
+                    function(data){
+                        // clear the current player list
+                        $("#players").html("");
+                        players = JSON.parse(data["players"].replace(/'/g, '"'));
+                        for (let player of players){
+                            // add back each player
+                            $("#players").append(`<li>${player}</li>`);
+                        }
+
+                        // check for game start
+                        if (data["start"] == "yes"){
+                            location.href = `game.html?id=${id}&game=${game}`;
+                        }
+                    }
+                )
+            }
+
+            setInterval(getPlayers,1000);
+            getPlayers();
+        </script>
+    </body>
+</html>
