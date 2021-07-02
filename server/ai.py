@@ -17,7 +17,7 @@ def neutral_AI():
     pass
 
 def chaotic_AI():
-    # Plays a wild, +2, swap or cancel
+    # Plays a wild (random color), +2, swap or cancel
     # if one can be played. Otherwise,
     # chooses a random valid move.
-    pass
+    

@@ -182,7 +182,16 @@ def drawCard():
         running_games[game_id].draw(player_id)
     return "error: game not found"
 
-''' BOILERPLATE '''
+@app.route("/return",methods=["POST"])
+# RETURN TO LOBBY ONCE GAME ENDS
+def returnToLobby():
+    json = request.get_json(force=True)
+    game_id = json["game"]
+    if game_id in running_games:
+        waiting_games[game_id] = running_games[game_id]
+        running_games.pop(game_id)
+    return "error: game not found"
 
+''' BOILERPLATE '''
 if __name__ == "__main__":
     app.run('0.0.0.0')

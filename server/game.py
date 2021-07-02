@@ -1,4 +1,4 @@
-import random
+import random, time
 
 # This is the Game class, which holds most of the functions relating to
 # the Tres game itself.
@@ -78,7 +78,6 @@ class Game():
         return False
 
     def play(self, player, card):
-        # TODO IMPLEMENT CHECKING
         # player (str): ID of player
         # card (str): card to play
 
@@ -134,7 +133,6 @@ class Game():
             if self.card.split("_")[1] == "PLUS":
                 for i in range(2):
                     self.state[self.turn][2].append(self.randomCard())
-
             return "success"
         return "error: cards do not match"
 
