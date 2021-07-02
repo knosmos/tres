@@ -20,6 +20,14 @@ running_games = {}
 # Length of game and player IDs
 id_length = 6
 
+@app.route("/")
+def index():
+    return '''
+    <h1>TRES</h1>
+    <h2><i>all systems nominal</i></h2>
+    <h2>Client webpage: <a href=https://knosmos.github.io/tres>knosmos.github.io/tres</a></h2>
+    '''
+
 ''' GAME CREATION AND JOINING '''
 
 def generateID(l,prev):
