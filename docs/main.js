@@ -100,7 +100,7 @@ function setTopcard(card){
     document.getElementById("top-card").innerHTML = getCardHTML(card, false);
 }
 
-setInterval(getData,1000);
+setInterval(getData,500);
 getData();
 
 // Show color selection box

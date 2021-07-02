@@ -1,4 +1,6 @@
 import random, time
+import ai
+from threading import Thread
 
 # This is the Game class, which holds most of the functions relating to
 # the Tres game itself.
@@ -10,6 +12,7 @@ class Game():
 
         # Stores the data of each player.
         # Each item has format [NAME, ID, [CARD1, CARD2, CARD3 ...]]
+        # Or format [NAME, ID, [CARD1, CARD2, CARD3 ...], AI_FUNC (lawful, neutral, chaotic)]
         self.state = []
 
         # Index of player in self.state that has turn
@@ -65,7 +68,6 @@ class Game():
 
     def isMatching(self, card1, card2):
         # Tests if cards match in either color or symbol.
-        # TODO implement wildcard
 
         color1, symbol1 = card1.split("_")
         color2, symbol2 = card2.split("_")
@@ -77,21 +79,25 @@ class Game():
 
         return False
 
-    def play(self, player, card):
+    def play(self, player, card, is_ai=False):
         # player (str): ID of player
         # card (str): card to play
+        # is_ai (bool): if the player is an AI, bypass the ID checks  
 
-        # First, find the player that matches with the ID
-        for i in range(len(self.state)):
-            if self.state[i][1] == player:
-                player_num = i
-                break
+        if is_ai:
+            player_num = self.turn
         else:
-            return "error: player not found"
+            # First, find the player that matches with the ID
+            for i in range(len(self.state)):
+                if self.state[i][1] == player:
+                    player_num = i
+                    break
+            else:
+                return "error: player not found"
 
-        # Check if it is the player's turn
-        if player_num != self.turn:
-            return "error: not player's turn"
+            # Check if it is the player's turn
+            if player_num != self.turn:
+                return "error: not player's turn"
         
         # Check if the player actually has the card
         if not(card in self.state[player_num][2]):
@@ -123,7 +129,7 @@ class Game():
                     self.advanceTurn()
 
             # Skip card
-            if self.card.split("_")[1] == "SKIP":
+            if self.card.split("_")[1] == "CANCEL":
                 self.advanceTurn()
 
             # Give turn to next player
@@ -133,6 +139,9 @@ class Game():
             if self.card.split("_")[1] == "PLUS":
                 for i in range(2):
                     self.state[self.turn][2].append(self.randomCard())
+        
+            self.playAI()
+
             return "success"
         return "error: cards do not match"
 
@@ -142,6 +151,7 @@ class Game():
                 if i == self.turn:
                     self.state[i][2].append(self.randomCard())
                     self.advanceTurn()
+                    self.playAI()
                     return "success"
                 else:
                     return "error: not player's turn"
@@ -163,3 +173,23 @@ class Game():
     def advanceTurn(self):
         # Moves turn one player in self.direction
         self.turn = (self.turn + self.direction) % len(self.state)
+
+    def playAI(self):
+        # Check if it is an AI's turn; if so, calls runAI in a new thread
+        print("Starting AI")
+        if self.state[self.turn][1] == "BOT":
+            # A thread must be used because the AI has a time-delay built in,
+            # so otherwise the original player move would not return until
+            # all the AIs finished their moves.
+            t = Thread(target = self.runAI)
+            t.start()
+    
+    def runAI(self):
+        move = ai.lawful_AI(self.state[self.turn][2], self.card)
+        if move == "draw":
+            print("playAI: received draw command")
+            self.state[self.turn][2].append(self.randomCard())
+            self.advanceTurn()
+            self.playAI()
+        else:
+            self.play("AI",move,True)
