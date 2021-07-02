@@ -19,7 +19,7 @@ def lawful_AI(cards, top_card):
     # Plays nice. Hates special cards and only plays them
     # when it has no choice.
     print("AI: thinking...")
-    time.sleep(1)
+    time.sleep(0.5)
     valid_cards = getAllValidMoves(cards, top_card)
     if len(valid_cards) == 0:
         print("AI: Drawing card")

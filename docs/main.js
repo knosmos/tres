@@ -23,6 +23,8 @@ $.get(`${SERVERURL}player_data?game=${game}&id=${id}`,
 let turn = 0;
 
 // Get updates on data
+let dataInterval;
+
 function getData(){
     $.get(`${SERVERURL}data?game=${game}&id=${id}`,
         function(data){
@@ -91,6 +93,8 @@ function setStandings(standings){
         if (player[1] == 0){
             $("#win-display").css("display","block");
             $("#winner-name").html(`${player[0]} won the game!`);
+            // Stop the update interval
+            clearInterval(dataInterval);
         }
     }
 }
@@ -100,7 +104,7 @@ function setTopcard(card){
     document.getElementById("top-card").innerHTML = getCardHTML(card, false);
 }
 
-setInterval(getData,500);
+dataInterval = setInterval(getData,500);
 getData();
 
 // Show color selection box
