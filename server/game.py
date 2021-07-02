@@ -109,6 +109,7 @@ class Game():
                         self.card = card
                         self.state[player_num][2].remove(c)
                         self.advanceTurn()
+                        self.playAI()
                         return "success"
                 else:
                     return "error: card not in player's hand"
