@@ -2,19 +2,18 @@
 Runs Uno2 AI opponent.
 '''
 
+#https://www.ultraboardgames.com/uno/strategies.php
+
 def lawful_AI():
     # Plays nice.
     pass
 
 def neutral_AI():
-    # A sort of "greedy" algorithm
-    # that chooses the sequence of cards
-    # with the largest length. Does not
-    # give special consideration to +2,
-    # swap or cancel; however, if it has
-    # a wild, it will immediately play it
+    # If it has a wild, it will immediately play it
     # and choose the color that it has the
-    # most of.
+    # most of. Otherwise, it will play the card that
+    # has the most common number or most common color
+    # in its hand.
     pass
 
 def chaotic_AI():

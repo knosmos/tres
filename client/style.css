@@ -25,8 +25,9 @@ body{
     grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
 }
 
-#div-flex{
-    display:flex;
+#div-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
 }
 
 /* TEXT */
@@ -44,9 +45,23 @@ a{
     color: #ca4016;
 }
 
+table{
+    width:90%;
+    border-collapse: collapse;
+    border-radius:10px;
+}
+
 li{
     font-size:20pt;
 }
+
+td{
+    font-size:20pt;
+    border:3px solid black;
+    padding:5px;
+}
+
+
 
 /* BOXES/BUTTONS */
 
@@ -61,6 +76,12 @@ li{
 #card-grid{
     display:grid;
     grid-template-columns: repeat(auto-fill,minmax(10px,160px));
+    gap:10px;
+}
+
+#color-card-grid{
+    display:grid;
+    grid-template-columns: repeat(4,minmax(10px,160px));
     gap:10px;
 }
 
@@ -117,7 +138,7 @@ input{
 }
 
 #card-piles .card{
-    width: min(40%, 200px);
+    width: 40%;
     display:inline-block;
     margin:10px;
 }

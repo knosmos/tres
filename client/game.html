@@ -17,16 +17,26 @@ or join existing game.
     <body>
         <div id=container>
             <h1>TRES</h1>
-            <div id=div-wrapper>
+            <div id=div-grid>
                 <div id=card-piles>
                     <div class=card onmousedown="drawCard()"><img src=assets/tres.png></div>
                     <span id=top-card></span>
                 </div>
-                <div class=box>
+                <div class=box id="standings-box">
                     <h2 class=info>Current Standings</h2>
-                    <ul id="standings">
-                    </ul>
+                    <table id="standings">
+                        
+                    </table>
                 </div>     
+            </div>
+            <div id=color-selection class=box style="display:none">
+                <h2 class=info>Please choose a color:</h2>
+                <div id=color-card-grid>
+                    <div class=card style="filter:hue-rotate(200deg);" onmousedown="playCard('B_WILD')"><img src=assets/wild2.png></div>
+                    <div class=card style="filter:hue-rotate(150deg);" onmousedown="playCard('G_WILD')"><img src=assets/wild2.png></div>
+                    <div class=card style="filter:hue-rotate(0deg);" onmousedown="playCard('R_WILD')"><img src=assets/wild2.png></div>
+                    <div class=card style="filter:hue-rotate(290deg);" onmousedown="playCard('P_WILD')"><img src=assets/wild2.png></div>
+                </div>
             </div>
             <div id=card-grid class=box>
             </div>
@@ -72,20 +82,25 @@ or join existing game.
             function getCardHTML(card, clickable){
                 // Returns HTML of given card
                 // card (str): card to display
-                // clickable (bool): whether card is playable (adds onclick part)
+                // clickable (bool): whether card is playable (adds onclick part, and influences)
+                // the image of the wildcard
                 let parts = card.split("_");
                 let hue = colors[parts[0]];
                 let symbol = parts[1];
                 
-                if (symbol == "CANCEL"){ symbol = "🚫" }
-                if (symbol == "REVERSE"){ symbol = "⮀" }
-                if (symbol == "PLUS"){ symbol = "+2" }
-                if (symbol == "WILD"){ symbol = "?" }
-
                 let onclick;
                 if (clickable) onclick = `onmousedown="playCard('${card}')"`;
                 else onclick = "";
 
+                if (symbol == "CANCEL"){ symbol = "🚫" }
+                if (symbol == "REVERSE"){ symbol = "⮀" }
+                if (symbol == "PLUS"){ symbol = "+2" }
+                if (symbol == "WILD"){
+                    if (clickable){
+                        return `<div class=card onmousedown="showColorSelection()"><img src=assets/wild.png></div>`;
+                    }
+                    return `<div class=card style="filter:hue-rotate(${hue}deg);"><img src=assets/wild2.png></div>`;
+                }
                 return `<div class=card style="filter:hue-rotate(${hue}deg);" ${onclick}><img src=assets/card.png><p>${symbol}</p></div>`;
             }
 
@@ -102,32 +117,48 @@ or join existing game.
                 $("#standings").html("");
                 for (let i=0; i<standings.length; i++){
                     player = standings[i];
-                    if (i == turn) $("#standings").append(`<li><b>${player[0]}: ${player[1]}</b></li>`);
-                    else $("#standings").append(`<li>${player[0]}: ${player[1]}</li>`);
+                    if (i == turn) $("#standings").append(`<tr style="background-color:#f7913e;"><td><b>${player[0]}</b></td><td><b>${player[1]}</b></td>`);
+                    else $("#standings").append(`<tr><td>${player[0]}</td><td>${player[1]}</td>`);
+                    //if (i == turn) $("#standings").append(`<li><b>${player[0]}: ${player[1]}</b></li>`);
+                    //else $("#standings").append(`<li>${player[0]}: ${player[1]}</li>`);
                 }
             }
 
             function setTopcard(card){
                 // Display current top card
-                $("#top-card").html(getCardHTML(card, false));
+                document.getElementById("top-card").innerHTML = getCardHTML(card, false);
             }
 
-            setInterval(getData,500);
+            setInterval(getData,1000);
             getData();
+
+            // Show color selection box
+            function showColorSelection(){
+                // Check if turn is correct
+                if (turn != player_turn){
+                    return "not player turn";
+                }
+                $("#color-selection").css("display", "block");
+            }
 
             // Send move requests
 
             function playCard(card){
-                // Send request to play card
-
                 // Check if turn is correct
-                if (turn == player_turn){
-                    $.post(SERVERURL+"play",JSON.stringify({
-                        game:game,
-                        id:id,
-                        card:card
-                    }),getData);                    
+                if (turn != player_turn){
+                    return "not player turn";
                 }
+
+                // This function may be called by the color-selection section,
+                // which means we need to hide it on click
+                $("#color-selection").css("display", "none");
+
+                // Send request to play card
+                $.post(SERVERURL+"play",JSON.stringify({
+                    game:game,
+                    id:id,
+                    card:card
+                }),getData);
             }
 
             function drawCard(){

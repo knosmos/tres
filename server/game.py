@@ -73,6 +73,8 @@ class Game():
         if color1 == color2: return True
         if symbol1 == symbol2: return True
 
+        if symbol2 == "WILD": return True
+
         return False
 
     def play(self, player, card):
@@ -83,21 +85,58 @@ class Game():
         # First, find the player that matches with the ID
         for i in range(len(self.state)):
             if self.state[i][1] == player:
-                # Check if it is the player's turn
-                if i == self.turn:
-                    # Check if the player actually has the card
-                    if card in self.state[i][2]:
-                        # Check if the card matches with the current top card
-                        if self.isMatching(self.card, card):
-                            # Make the move
-                            self.state[i][2].remove(card)
-                            self.card = card
-                            self.advanceTurn()
-                            return "success"
-                        return "error: cards do not match"
+                player_num = i
+                break
+        else:
+            return "error: player not found"
+
+        # Check if it is the player's turn
+        if player_num != self.turn:
+            return "error: not player's turn"
+        
+        # Check if the player actually has the card
+        if not(card in self.state[player_num][2]):
+            # If it's a wild card, the color doesn't matter
+            if card.split("_")[1] == "WILD":
+                for c in self.state[player_num][2]:
+                    if c.split("_")[1] == "WILD":
+                        # Wild matches anything, we can skip the matching test
+                        self.card = card
+                        self.state[player_num][2].remove(c)
+                        self.advanceTurn()
+                        return "success"
+                else:
                     return "error: card not in player's hand"
-                return "error: not player's turn"
-        return "error: player not found"
+            else:
+                return "error: card not in player's hand"
+        
+        # Check if the card matches with the current top card
+        if self.isMatching(self.card, card):
+            # Make the move
+            self.state[player_num][2].remove(card)
+            self.card = card
+
+            # Reverse card (acts like skip in two player game)
+            if self.card.split("_")[1] == "REVERSE":
+                if len(self.state) > 2:
+                    self.direction *= -1
+                else:
+                    self.advanceTurn()
+
+            # Skip card
+            if self.card.split("_")[1] == "SKIP":
+                self.advanceTurn()
+
+            # Give turn to next player
+            self.advanceTurn()
+
+            # +2 card
+            if self.card.split("_")[1] == "PLUS":
+                for i in range(2):
+                    self.state[self.turn][2].append(self.randomCard())
+
+            return "success"
+        return "error: cards do not match"
 
     def draw(self, player):
         for i in range(len(self.state)):
