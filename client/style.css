@@ -25,6 +25,10 @@ body{
     grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
 }
 
+#div-flex{
+    display:flex;
+}
+
 /* TEXT */
 
 h1{
@@ -103,16 +107,25 @@ input{
     top:-5px;
     left:-5px;
     cursor: pointer;
+    user-select: none;
+
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
 }
 
-#top-grid{
-    text-align: center;
-}
-
-#top-grid .card{
-    width: min(50%, 200px);
+#card-piles .card{
+    width: min(40%, 200px);
     display:inline-block;
     margin:10px;
+}
+
+@media screen and (max-width:1200px){ 
+    #card-piles{
+        text-align:center;
+    }
 }
 
 .card:hover{
@@ -122,6 +135,7 @@ input{
 .card img{
     width:100%;
     filter:drop-shadow(5px 5px 0px rgba(29, 29, 29, 0.562));
+    user-select: none;
 }
 .card:hover img{
     filter:none;
@@ -137,4 +151,5 @@ input{
     margin:0;
     padding:0;
     filter:grayscale(1);
+    user-select: none;
 }

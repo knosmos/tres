@@ -1,16 +1,128 @@
+import random
+
+# This is the Game class, which holds most of the functions relating to
+# the Tres game itself.
+
 class Game():
     def __init__(self, id):
+        # Card on top of the discard pile
+        self.card = self.randomCard()
+
+        # Stores the data of each player.
+        # Each item has format [NAME, ID, [CARD1, CARD2, CARD3 ...]]
         self.state = []
+
+        # Index of player in self.state that has turn
         self.turn = 0
 
+        # Which direction the turn advances
+        self.direction = 1
+
     def players(self):
+        # Gets list of player names
         players = []
         for player_data in self.state:
             players.append(player_data[0])
         return str(players)
-        
-    def checkMove(self, player, card):
-        # First, check if the player actually has the card
+    
+    def numCards(self):
+        # Gets the number of cards that each player has
+        numCards = []
+        for player_data in self.state:
+            numCards.append([player_data[0], len(player_data[2])])
+        return numCards
 
-        # Then, check if the card matches with the current top card
-        pass
+    def playerCards(self,player):
+        # Gets the cards that one player has (ID required)
+        for player_data in self.state:
+            if player_data[1] == player:
+                return player_data[2]
+        return "error: player not found"
+
+    def getPlayerData(self,player):
+        # Gets player name and turn number.
+        for i in range(len(self.state)):
+            if self.state[i][1] == player:
+                return {
+                    "name":self.state[i][0],
+                    "turn_number":i
+                }
+        return "error: player not found"
+
+    def randomCard(self):
+        # Generates a random card.
+        color = random.choice(["R","B","G","P"]) # Red, Blue, Green, Purple
+        symbol = random.choice(["0","1","2","3","4","5","6","7","8","9","PLUS","WILD","REVERSE","CANCEL"])
+        return color+"_"+symbol
+
+    def assignCards(self):
+        # Randomly assigns seven cards to each player. Also clears existing cards.
+        numCards = 7
+        for player in self.state:
+            player[2] = []
+            for card in range(numCards):
+                player[2].append(self.randomCard())
+
+    def isMatching(self, card1, card2):
+        # Tests if cards match in either color or symbol.
+        # TODO implement wildcard
+
+        color1, symbol1 = card1.split("_")
+        color2, symbol2 = card2.split("_")
+
+        if color1 == color2: return True
+        if symbol1 == symbol2: return True
+
+        return False
+
+    def play(self, player, card):
+        # TODO IMPLEMENT CHECKING
+        # player (str): ID of player
+        # card (str): card to play
+
+        # First, find the player that matches with the ID
+        for i in range(len(self.state)):
+            if self.state[i][1] == player:
+                # Check if it is the player's turn
+                if i == self.turn:
+                    # Check if the player actually has the card
+                    if card in self.state[i][2]:
+                        # Check if the card matches with the current top card
+                        if self.isMatching(self.card, card):
+                            # Make the move
+                            self.state[i][2].remove(card)
+                            self.card = card
+                            self.advanceTurn()
+                            return "success"
+                        return "error: cards do not match"
+                    return "error: card not in player's hand"
+                return "error: not player's turn"
+        return "error: player not found"
+
+    def draw(self, player):
+        for i in range(len(self.state)):
+            if self.state[i][1] == player:
+                if i == self.turn:
+                    self.state[i][2].append(self.randomCard())
+                    self.advanceTurn()
+                    return "success"
+                else:
+                    return "error: not player's turn"
+        return "error: player not found"
+
+    def getData(self, player):
+        # Sends the cards that player has, the number of cards
+        # that each of the other players have, and whose turn it is.
+
+        # player (str): ID of player
+
+        return {
+            "player_cards":self.playerCards(player),
+            "num_cards":self.numCards(),
+            "top_card":self.card,
+            "turn":self.turn,
+        }
+    
+    def advanceTurn(self):
+        # Moves turn one player in self.direction
+        self.turn = (self.turn + self.direction) % len(self.state)

@@ -10,22 +10,134 @@ or join existing game.
     <head>
         <title>Tres</title>
         <link rel=stylesheet href=style.css>
-        <link rel=icon href=logo.png>
+        <link rel=icon href=assets/logo.png>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src=constants.js></script>
     </head>
     <body>
         <div id=container>
             <h1>TRES</h1>
-            <div id=top-grid>
-                <div class=card><img src=assets/tres.png></div>
-                <div class=card style="filter:hue-rotate(200deg);"><img src=assets/card.png><p>0</p></div>
-                <div class=card><img src=assets/next.png></div>
+            <div id=div-wrapper>
+                <div id=card-piles>
+                    <div class=card onmousedown="drawCard()"><img src=assets/tres.png></div>
+                    <span id=top-card></span>
+                </div>
+                <div class=box>
+                    <h2 class=info>Current Standings</h2>
+                    <ul id="standings">
+                    </ul>
+                </div>     
             </div>
             <div id=card-grid class=box>
-                <div class=card style="filter:hue-rotate(200deg);"><img src=assets/card.png><p>0</p></div>
-                <div class=card style="filter:hue-rotate(150deg);"><img src=assets/card.png><p>2</p></div>
-                <div class=card style="filter:hue-rotate(0deg);"><img src=assets/card.png><p>🚫</p></div>
-                <div class=card style="filter:hue-rotate(290deg);"><img src=assets/card.png><p>⮀</p></div>
             </div>
         </div>
+        <script>
+            // Get query string parameters
+            let urlParams = new URLSearchParams(window.location.search);
+            let game = urlParams.get("game");
+            let id = urlParams.get("id");
+
+            // Colors are implemented by hue-rotating a red card via CSS.
+            let colors = {
+                "B":200,
+                "G":150,
+                "R":0,
+                "P":290
+            }
+
+            // Get player name + turn number
+            let player_name, player_turn;
+            $.get(`${SERVERURL}player_data?game=${game}&id=${id}`,
+                function(data){
+                    player_name = data["name"];
+                    player_turn = data["turn_number"];
+                }
+            )
+
+            let turn = 0;
+
+            // Get updates on data
+            function getData(){
+                $.get(`${SERVERURL}data?game=${game}&id=${id}`,
+                    function(data){
+                        console.log(JSON.stringify(data));
+                        setCards(data["player_cards"]);
+                        setStandings(data["num_cards"]);
+                        setTopcard(data["top_card"]);
+                        turn = data["turn"];
+                    }
+                )
+            }
+
+            function getCardHTML(card, clickable){
+                // Returns HTML of given card
+                // card (str): card to display
+                // clickable (bool): whether card is playable (adds onclick part)
+                let parts = card.split("_");
+                let hue = colors[parts[0]];
+                let symbol = parts[1];
+                
+                if (symbol == "CANCEL"){ symbol = "🚫" }
+                if (symbol == "REVERSE"){ symbol = "⮀" }
+                if (symbol == "PLUS"){ symbol = "+2" }
+                if (symbol == "WILD"){ symbol = "?" }
+
+                let onclick;
+                if (clickable) onclick = `onmousedown="playCard('${card}')"`;
+                else onclick = "";
+
+                return `<div class=card style="filter:hue-rotate(${hue}deg);" ${onclick}><img src=assets/card.png><p>${symbol}</p></div>`;
+            }
+
+            function setCards(cards){
+                // Clear currently displayed cards
+                $("#card-grid").html("");
+                for (let card of cards){
+                    $("#card-grid").append(getCardHTML(card, true));
+                }
+            }
+
+            function setStandings(standings){
+                // Display standings (how many cards each player has)
+                $("#standings").html("");
+                for (let i=0; i<standings.length; i++){
+                    player = standings[i];
+                    if (i == turn) $("#standings").append(`<li><b>${player[0]}: ${player[1]}</b></li>`);
+                    else $("#standings").append(`<li>${player[0]}: ${player[1]}</li>`);
+                }
+            }
+
+            function setTopcard(card){
+                // Display current top card
+                $("#top-card").html(getCardHTML(card, false));
+            }
+
+            setInterval(getData,500);
+            getData();
+
+            // Send move requests
+
+            function playCard(card){
+                // Send request to play card
+
+                // Check if turn is correct
+                if (turn == player_turn){
+                    $.post(SERVERURL+"play",JSON.stringify({
+                        game:game,
+                        id:id,
+                        card:card
+                    }),getData);                    
+                }
+            }
+
+            function drawCard(){
+                // Send request to draw card to server
+                $.post(SERVERURL+"draw",JSON.stringify({
+                    game:game,
+                    id:id
+                }),getData);
+            }
+
+        </script>
     </body>
 </html>

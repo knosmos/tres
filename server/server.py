@@ -118,8 +118,10 @@ def addAI():
         return "error: nonexistent game"
     return "success"
 
+''' GAME '''
+
 @app.route("/start",methods=["POST"])
-# START THE GIVEN GAME
+# START THE GAME
 def startGame():
     # Get game ID
     json = request.get_json(force=True)
@@ -130,12 +132,55 @@ def startGame():
         # Move game from waiting_games to running_games
         running_games[game_id] = waiting_games[game_id]
         waiting_games.pop(game_id)
+        # Assign cards to each player
+        running_games[game_id].assignCards()
         return "success"
     
     # Errors (not displayed to client, but useful for debugging)
     elif game_id in running_games:
         return "error: game already running"
     return "error: nonexistent game"
+
+@app.route("/player_data",methods=["GET"])
+# SEND PLAYER NAME AND TURN NUMBER
+def getPlayerData():
+    game_id = request.args["game"]
+    player_id = request.args["id"]
+    if game_id in running_games:
+        return jsonify(running_games[game_id].getPlayerData(player_id))
+    return "error: game not found"
+
+@app.route("/data",methods=["GET"])
+# SEND ALL GAME DATA TO PLAYERS
+def getData():
+    # Get game and player ID
+    game_id = request.args["game"]
+    player_id = request.args["id"]
+    if game_id in running_games:
+        return jsonify(running_games[game_id].getData(player_id))
+    return "error: game not found"
+
+@app.route("/play",methods=["POST"])
+def playCard():
+    json = request.get_json(force=True)
+
+    game_id = json["game"]
+    player_id = json["id"]
+    card = json["card"]
+
+    if game_id in running_games:
+        running_games[game_id].play(player_id, card)
+    return "error: game not found"
+
+@app.route("/draw",methods=["POST"])
+# ADD ONE CARD TO PLAYER'S HAND, ADVANCE TURN
+def drawCard():
+    json = request.get_json(force=True)
+    game_id = json["game"]
+    player_id = json["id"]
+    if game_id in running_games:
+        running_games[game_id].draw(player_id)
+    return "error: game not found"
 
 ''' BOILERPLATE '''
 
