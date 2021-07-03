@@ -28,31 +28,32 @@ or join existing game.
                 <button onmousedown="returnToLobby()">Play again</button>
             </div>
             <div id=div-grid>
-                <div id=card-piles>
-                    <!-- Button to draw card -->
-                    <div class=card onmousedown="drawCard()"><img src=assets/tres.png></div>
-                    <!-- Top card in discard pile -->
-                    <span id=top-card></span>
+                <div style="grid-column:1 / span 2">
+                    <div id=card-piles>
+                        <!-- Button to draw card -->
+                        <div class=card onmousedown="drawCard()"><img src=assets/tres.png></div>
+                        <!-- Top card in discard pile -->
+                        <span id=top-card></span>
+                    </div>                    
+                    <!-- Color selection for Wild Cards -->
+                    <div id=color-selection class=box style="display:none">
+                        <h2 class=info>Please choose a color:</h2>
+                        <div id=color-card-grid>
+                            <div class=card style="filter:hue-rotate(200deg);" onmousedown="playCard('B_WILD')"><img src=assets/wild2.png></div>
+                            <div class=card style="filter:hue-rotate(150deg);" onmousedown="playCard('G_WILD')"><img src=assets/wild2.png></div>
+                            <div class=card style="filter:hue-rotate(0deg);" onmousedown="playCard('R_WILD')"><img src=assets/wild2.png></div>
+                            <div class=card style="filter:hue-rotate(290deg);" onmousedown="playCard('P_WILD')"><img src=assets/wild2.png></div>
+                        </div>
+                    </div>
+                    <!-- Display each of the cards that the player has -->
+                    <div id=card-grid class=box>
+                    </div>                    
                 </div>
                 <div class=box id="standings-box">
                     <!-- How many cards each player has left -->
                     <h2 class=info>Current Standings</h2>
-                    <table id="standings">
-                    </table>
+                    <div id=standings></div>
                 </div>     
-            </div>
-            <!-- Color selection for Wild Cards -->
-            <div id=color-selection class=box style="display:none">
-                <h2 class=info>Please choose a color:</h2>
-                <div id=color-card-grid>
-                    <div class=card style="filter:hue-rotate(200deg);" onmousedown="playCard('B_WILD')"><img src=assets/wild2.png></div>
-                    <div class=card style="filter:hue-rotate(150deg);" onmousedown="playCard('G_WILD')"><img src=assets/wild2.png></div>
-                    <div class=card style="filter:hue-rotate(0deg);" onmousedown="playCard('R_WILD')"><img src=assets/wild2.png></div>
-                    <div class=card style="filter:hue-rotate(290deg);" onmousedown="playCard('P_WILD')"><img src=assets/wild2.png></div>
-                </div>
-            </div>
-            <!-- Display each of the cards that the player has -->
-            <div id=card-grid class=box>
             </div>
         </div>
         <script src=main.js></script>

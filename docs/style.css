@@ -10,14 +10,14 @@ body{
 }
 
 #container{
-    margin-left:15%;
-    margin-right:15%;
+    margin-left:5%;
+    margin-right:5%;
 }
 
 @media screen and (max-width:700px) {
     #container{
-        margin-left:5%;
-        margin-right:5%;
+        margin-left:10px;
+        margin-right:10px;
     }
 }
 
@@ -28,7 +28,7 @@ body{
 
 #div-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(400px,1fr));
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
 }
 
 /* TEXT */
@@ -76,7 +76,7 @@ td{
 
 #card-grid{
     display:grid;
-    grid-template-columns: repeat(auto-fill,minmax(10px,160px));
+    grid-template-columns: repeat(auto-fill,minmax(10px,140px));
     gap:10px;
 }
 
@@ -136,17 +136,14 @@ input{
     -moz-user-drag: none;
     -o-user-drag: none;
 }
-
-#card-piles .card{
-    width: 40%;
-    display:inline-block;
-    margin:10px;
+#card-piles{
+    text-align:center;
 }
 
-@media screen and (max-width:1200px){ 
-    #card-piles{
-        text-align:center;
-    }
+#card-piles .card{
+    width: max(20%,160px);
+    display:inline-block;
+    margin:10px;
 }
 
 .card:hover{
@@ -173,4 +170,29 @@ input{
     padding:0;
     filter:grayscale(1);
     user-select: none;
+}
+
+/* Current standings */
+
+.player-info{
+    border-radius:10px;
+    padding:10px;
+    margin:5px;
+    position:relative;
+    border:4px solid transparent;
+}
+
+.player-info h2{
+    margin:0px;
+}
+
+.marker-card-div{
+    position:relative;
+}
+
+.marker-card{
+    position:absolute;
+    top:0;
+    width:15%;
+    filter:drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.562));
 }

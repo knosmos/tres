@@ -97,9 +97,25 @@ function setStandings(standings){
     $("#standings").html("");
     for (let i=0; i<standings.length; i++){
         player = standings[i];
-        if (i == turn) $("#standings").append(`<tr style="background-color:#f7913e;"><td><b>${player[0]}</b></td><td><b>${player[1]}</b></td>`);
-        else $("#standings").append(`<tr><td>${player[0]}</td><td>${player[1]}</td>`);
-        
+        //if (i == turn) $("#standings").append(`<tr style="background-color:#f7913e;"><td><b>${player[0]}</b></td><td><b>${player[1]}</b></td>`);
+        //else $("#standings").append(`<tr><td>${player[0]}</td><td>${player[1]}</td>`);
+
+        let div_html = "<div class=player-info>";
+        if (i == turn){
+            div_html = '<div class=player-info style="background-color:#f7913e;border:4px solid black">';
+        }
+        div_html += `<h2>${player[0]}</h2>`;
+
+        div_html += "<br><div class=marker-card-div>";
+        for (let i=0; i<player[1]; i++){
+            if (i==0){ // This is necessary to make sure the player-info div has the right height
+                div_html += `<img src=assets/hiddencard.png class=marker-card style='position:relative'>`;
+            }
+            div_html += `<img src=assets/hiddencard.png class=marker-card style='left:${i*8}%'>`;
+        }
+        div_html += "</div></div>";
+        $("#standings").append(div_html);
+
         // Check if someone has won and display winner message
         if (player[1] == 0){
             $("#win-display").css("display","block");
