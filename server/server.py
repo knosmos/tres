@@ -121,6 +121,7 @@ def addAI():
         if num_bots < 10:
             # Add BOT player to game object
             ai_type = random.choice([ai.lawful_AI, ai.neutral_AI, ai.chaotic_AI])
+            # waiting_games[game_id].state.append([names[num_bots]+"Bot - "+ai_type.__name__,"BOT",[],ai_type])
             waiting_games[game_id].state.append([names[num_bots]+"Bot","BOT",[],ai_type])
         else:
             return "error: too many bots"
@@ -142,8 +143,8 @@ def startGame():
         # Move game from waiting_games to running_games
         running_games[game_id] = waiting_games[game_id]
         waiting_games.pop(game_id)
-        # Assign cards to each player
-        running_games[game_id].assignCards()
+        # Initialize game state
+        running_games[game_id].initialize()
         return "success"
     
     # Errors (not displayed to client, but useful for debugging)

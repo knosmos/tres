@@ -66,6 +66,12 @@ class Game():
             for card in range(numCards):
                 player[2].append(self.randomCard())
 
+    def initialize(self):
+        # Resets game state (turn, direction) and re-assigns cards
+        self.turn = 0
+        self.direction = 1
+        self.assignCards()
+
     def isMatching(self, card1, card2):
         # Tests if cards match in either color or symbol.
 
