@@ -186,7 +186,8 @@ class Game():
             t.start()
     
     def runAI(self):
-        move = ai.lawful_AI(self.state[self.turn][2], self.card)
+        ai_type = self.state[self.turn][3]
+        move = ai_type(self.state[self.turn][2], self.card)
         if move == "draw":
             print("playAI: received draw command")
             self.state[self.turn][2].append(self.randomCard())

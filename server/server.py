@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import random
 from game import Game
+import ai
 
 app = Flask(__name__)
 CORS(app, support_credentials=True)
@@ -119,7 +120,8 @@ def addAI():
                 num_bots += 1
         if num_bots < 10:
             # Add BOT player to game object
-            waiting_games[game_id].state.append([names[num_bots]+"Bot","BOT",[]])
+            ai_type = random.choice([ai.lawful_AI, ai.neutral_AI, ai.chaotic_AI])
+            waiting_games[game_id].state.append([names[num_bots]+"Bot","BOT",[],ai_type])
         else:
             return "error: too many bots"
     else:
