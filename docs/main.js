@@ -61,16 +61,27 @@ function getCardHTML(card, clickable){
     if (clickable) onclick = `onmousedown="playCard('${card}')"`;
     else onclick = "";
 
-    if (symbol == "CANCEL"){ symbol = "🚫" }
-    if (symbol == "REVERSE"){ symbol = "⮀" }
-    if (symbol == "PLUS"){ symbol = "+2" }
+    let img_src = "card.png";
+
+    if (symbol == "CANCEL"){
+        symbol = "";
+        img_src = "cancel.png";
+    }
+    if (symbol == "REVERSE"){
+        symbol = "";
+        img_src = "reverse.png";
+    }
+    if (symbol == "PLUS"){
+        symbol = "";
+        img_src = "plus.png";
+    }
     if (symbol == "WILD"){
         if (clickable){
             return `<div class=card onmousedown="showColorSelection()"><img src=assets/wild.png></div>`;
         }
         return `<div class=card style="filter:hue-rotate(${hue}deg);"><img src=assets/wild2.png></div>`;
     }
-    return `<div class=card style="filter:hue-rotate(${hue}deg);" ${onclick}><img src=assets/card.png><p>${symbol}</p></div>`;
+    return `<div class=card style="filter:hue-rotate(${hue}deg);" ${onclick}><img src=assets/${img_src}><p>${symbol}</p></div>`;
 }
 
 function setCards(cards){
