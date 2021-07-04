@@ -54,6 +54,11 @@ table{
 
 li{
     font-size:20pt;
+    cursor:pointer;
+}
+
+li:hover{
+    text-decoration: underline;
 }
 
 td{

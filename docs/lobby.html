@@ -27,6 +27,7 @@ add AI players, start game once ready.
             <div id=div-wrapper>
                 <div class=box>
                     <h2>CONNECTED PLAYERS</h2>
+                    <i>If you are the host, click to remove a player</i>
                     <ul id="players">
                     </ul>
                 </div>
@@ -76,9 +77,9 @@ add AI players, start game once ready.
                         // clear the current player list
                         $("#players").html("");
                         players = JSON.parse(data["players"].replace(/'/g, '"'));
-                        for (let player of players){
+                        for (let i=0; i<players.length; i++){
                             // add back each player
-                            $("#players").append(`<li>${player}</li>`);
+                            $("#players").append(`<li onclick="kickPlayer(${i})">${players[i]}</li>`);
                         }
 
                         // check for game start
@@ -91,6 +92,20 @@ add AI players, start game once ready.
 
             setInterval(getPlayers,1000);
             getPlayers();
+
+            // Kick a player
+            function kickPlayer(num){
+                $.post(SERVERURL+"remove",JSON.stringify({
+                    game:game,
+                    num:num,
+                    id:id
+                }),function(msg){
+                    getPlayers();
+                    if (!msg.startsWith("Successfully")){
+                        alert(msg);
+                    }
+                });
+            }
         </script>
     </body>
 </html>

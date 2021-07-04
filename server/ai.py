@@ -59,7 +59,11 @@ def neutral_AI(cards, top_card):
         # If it has wild card, play it
         card = chosen_color+"_WILD"
     else:
-        card = valid_cards[0]
+        for c in valid_cards:
+            if c.split("_")[0] == chosen_color:
+                card = c
+        else:
+            card = valid_cards[0]
     print("neutral_AI: Playing",card)
     return card
 

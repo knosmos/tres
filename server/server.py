@@ -129,6 +129,26 @@ def addAI():
         return "error: nonexistent game"
     return "success"
 
+@app.route("/remove",methods=["POST"])
+# Kick a player from the game
+def kick():
+    json = request.get_json(force=True)
+    game_id = json["game"]
+    player_num = json["num"] # number of the player to kick
+    player_id = json["id"]
+
+    g = waiting_games[game_id].state
+
+    if game_id in waiting_games:
+        if g[0][1] == player_id:
+            if g[player_num][1] != player_id:
+                removed_player_name = g[player_num][0]
+                g.pop(player_num)
+                return "Successfully removed player "+removed_player_name
+            return "You cannot remove yourself"
+        return "Non-host players cannot remove players"
+    return "error: nonexistent game"
+
 ''' GAME '''
 
 @app.route("/start",methods=["POST"])
