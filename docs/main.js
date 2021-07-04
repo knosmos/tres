@@ -22,6 +22,8 @@ $.get(`${SERVERURL}player_data?game=${game}&id=${id}`,
 
 let turn = 0;
 
+let game_over = false;
+
 // Get updates on data
 let dataInterval;
 
@@ -43,12 +45,7 @@ function getData(){
                 setCards(data["player_cards"]);
                 setStandings(data["num_cards"]);
                 setTopcard(data["top_card"]);
-                if (turn == player_turn){
-                    $("#player-turn-display").css("display","block");
-                }
-                else{
-                    $("#player-turn-display").css("display","none");
-                }
+                setPlayerTurnDisplay();
             }
         }
     )
@@ -129,6 +126,7 @@ function setStandings(standings){
             $("#winner-name").html(`${player[0]} won the game!`);
             // Stop the update interval
             clearInterval(dataInterval);
+            game_over = true;
         }
     }
 }
@@ -138,11 +136,27 @@ function setTopcard(card){
     document.getElementById("top-card").innerHTML = getCardHTML(card, false);
 }
 
+function setPlayerTurnDisplay(){
+    if (game_over){
+        return "game over";
+    }
+    if (turn == player_turn){
+        $("#player-turn-display").css("display","block");
+    }
+    else{
+        $("#player-turn-display").css("display","none");
+    }    
+}
+
+
 dataInterval = setInterval(getData,500);
 getData();
 
 // Show color selection box
 function showColorSelection(){
+    if (game_over){
+        return "game over";
+    }
     // Check if turn is correct
     if (turn != player_turn){
         return "not player turn";
@@ -153,6 +167,10 @@ function showColorSelection(){
 // Send move requests
 
 function playCard(card){
+    if (game_over){
+        return "game over";
+    }
+
     // Check if turn is correct
     if (turn != player_turn){
         return "not player turn";
@@ -171,6 +189,10 @@ function playCard(card){
 }
 
 function drawCard(){
+    if (game_over){
+        return "game over";
+    }
+
     // Send request to draw card to server
     $.post(SERVERURL+"draw",JSON.stringify({
         game:game,
