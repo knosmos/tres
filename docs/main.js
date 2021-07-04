@@ -39,10 +39,16 @@ function getData(){
             }
             else{
                 console.log(JSON.stringify(data));
+                turn = data["turn"]; 
                 setCards(data["player_cards"]);
                 setStandings(data["num_cards"]);
                 setTopcard(data["top_card"]);
-                turn = data["turn"];                
+                if (turn == player_turn){
+                    $("#player-turn-display").css("display","block");
+                }
+                else{
+                    $("#player-turn-display").css("display","none");
+                }
             }
         }
     )
@@ -87,6 +93,7 @@ function getCardHTML(card, clickable){
 function setCards(cards){
     // Clear currently displayed cards
     $("#card-grid").html("");
+    // Add each card
     for (let card of cards){
         $("#card-grid").append(getCardHTML(card, true));
     }

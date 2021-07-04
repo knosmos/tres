@@ -36,7 +36,7 @@ def generateID(l,prev):
     # that is not in prev
     res = ""
     while not(res) and not(res in prev):
-        res = ''.join(random.choice("abcdefghijklmnopqrstuvwxyz") for _ in range(l))
+        res = ''.join(random.choice("0123456789") for _ in range(l))
     return res
 
 @app.route("/create",methods=["POST"])
