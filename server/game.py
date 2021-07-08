@@ -152,6 +152,7 @@ class Game():
             if self.card.split("_")[1] == "PLUS":
                 for i in range(2):
                     self.state[self.turn][2].append(self.randomCard())
+                self.advanceTurn()
         
             self.playAI()
 
