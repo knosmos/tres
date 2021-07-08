@@ -1,9 +1,15 @@
+'''
+Description: This implements the Game class, which holds most of the functions
+relating to the Tres game itself.
+
+Author: Jieruei Chang
+Language: Python 3.9.5
+Date: 7/5/2021
+'''
+
 import random, time
 import ai
 from threading import Thread
-
-# This is the Game class, which holds most of the functions relating to
-# the Tres game itself.
 
 class Game():
     def __init__(self, id):

@@ -1,7 +1,11 @@
 '''
-Uno2 AI opponents. There are three types of simple AI:
+Description: Uno2 AI opponents. There are three types of simple AI:
 lawful, neutral and chaotic. Each has a distinct "personality"
 to make the game more interesting.
+
+Author: Jieruei Chang
+Language: Python 3.9.5
+Date: 7/7/2021
 '''
 
 import time
@@ -62,6 +66,7 @@ def neutral_AI(cards, top_card):
         for c in valid_cards:
             if c.split("_")[0] == chosen_color:
                 card = c
+                break
         else:
             card = valid_cards[0]
     print("neutral_AI: Playing",card)
@@ -80,3 +85,21 @@ def chaotic_AI(cards, top_card):
             return card
     print("chaotic_AI: playing",valid_cards[0])
     return valid_cards[0] # Fine, return a number card
+
+'''
+lawful_AI test - should play number card:
+>>> ai.lawful_AI(["G_9","G_CANCEL"],"G_1")
+lawful_AI: playing G_9
+'G_9'
+
+neutral_AI test - should play green card:
+>>> ai.neutral_AI(["R_0","G_0","G_1","G_2"],"R_0")
+neutral_AI: thinking...
+neutral_AI: Playing G_0
+'G_0'
+
+chaotic_AI test - should play cancel card:
+>>> ai.chaotic_AI(["G_9","G_CANCEL"],"G_1")
+chaotic_AI: playing G_CANCEL
+'G_CANCEL'
+'''

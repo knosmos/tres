@@ -1,3 +1,15 @@
+'''
+Description: TRES is an online Uno clone. It features multiplayer support,
+a clean UI, and AI players with different strategies.
+
+This holds all of the server code that is used to
+communicate with the clients.
+
+Author: Jieruei Chang
+Language: Python 3.9.5
+Date: 7/5/2021
+'''
+
 ''' INITIALIZATION '''
 
 from flask import Flask, request, jsonify
