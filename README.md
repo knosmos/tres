@@ -1,8 +1,7 @@
 # Tres
 *By Jieruei Chang 2021*
 
-
-![image](https://user-images.githubusercontent.com/30610197/124396441-8efda900-dcd7-11eb-83a3-8b9de2066f17.png)
+![Tres picture](https://user-images.githubusercontent.com/30610197/124502398-6803ad80-dd91-11eb-8c46-1585ae59c987.png)
 
 TRES is an online Uno clone. It features multiplayer support, a clean UI, and somewhat competent AI players with different strategies. It uses a HTML/JS frontend hosted on Github Pages,
 and a Flask backend running on PythonAnywhere. You can play at [knosmos.github.io/tres](https://knosmos.github.io/tres).
