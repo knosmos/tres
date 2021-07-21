@@ -19,33 +19,28 @@ or join existing game.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="The classic online multiplayer Uno ripoff">
-        <meta property='og:title'  content='assets/preview.png'>
     </head>
     <body>
-        <div id=container>
+        <div id="container">
             <h1>TRES</h1>
             <h2 class=info>The classic online Uno ripoff</h2>
             <h2><a href=rules.html>View Rules</a></h2>
+            <div class=box id=div-code>
+                <h2>Join game: <span id=join-code></span></h2>
+            </div>
             <div class=box id=div-name>
                 <h3>Please enter your name</h3>
                 <input id=player-name>
-            </div>
-            <div id=div-wrapper>
-                <div class=box id=div-start-game>
-                    <h2>NEW GAME</h2>
-                    <button onclick="createGame()">CREATE</button>
-                </div>
-                <div class=box id=div-join-game>
-                    <h2>JOIN GAME</h2>
-                    <h3>Enter join code</h3>
-                    <input id=join-game>
-                    <br>
-                    <button onclick="joinGame()">JOIN</button>
-                </div>
+                <br>
+                <button onclick="joinGame()">JOIN</button>
             </div>
             <h2 class=info>By Jieruei Chang 2021</h2>
         </div>
         <script>
+            let urlParams = new URLSearchParams(window.location.search);
+            let game = urlParams.get("game");
+            $("#join-code").html(game)
+
             function redirect(data){
                 if (data == "error: nonexistent game"){
                     alert("Invalid game code!");
@@ -56,17 +51,10 @@ or join existing game.
                     location.href = `lobby.html?id=${id}&game=${game}`;                      
                 }  
             }
-
-            function createGame(){
-                $.post(SERVERURL+"create",JSON.stringify({
-                    name:$("#player-name").val(),
-                }),redirect);
-            }
-
             function joinGame(){
                 $.post(SERVERURL+"join",JSON.stringify({
                     name:$("#player-name").val(),
-                    game:$("#join-game").val()
+                    game:game
                 }),redirect);
             }
         </script>

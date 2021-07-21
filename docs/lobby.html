@@ -23,6 +23,7 @@ add AI players, start game once ready.
             <h2 class=info>Waiting to start...</h2>
             <div class=box>
                 <h2>JOIN CODE: <span id="game-id"></span></h2>
+                <h2 class=info>Invite link: <a id="invite-link"></a></h2>
             </div>
             <div id=div-wrapper>
                 <div class=box>
@@ -46,6 +47,8 @@ add AI players, start game once ready.
 
             // Display game ID
             $("#game-id").html(game);
+            $("#invite-link").html("knosmos.github.io/tres/join?game="+game);
+            $("#invite-link").attr("href", "https://knosmos.github.io/tres/join.html?game="+game)
 
             /*
             Add an AI player to the game

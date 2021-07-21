@@ -10,12 +10,21 @@ body{
 }
 
 #container{
+    margin-left:20%;
+    margin-right:20%;
+}
+
+#play-container{
     margin-left:5%;
     margin-right:5%;
 }
 
 @media screen and (max-width:700px) {
     #container{
+        margin-left:10px;
+        margin-right:10px;
+    }
+    #play-container{
         margin-left:10px;
         margin-right:10px;
     }
