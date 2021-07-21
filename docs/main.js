@@ -127,6 +127,7 @@ function setStandings(standings){
             // Stop the update interval
             clearInterval(dataInterval);
             game_over = true;
+            setInterval(checkIfReturn,1000);
         }
     }
 }
@@ -207,4 +208,16 @@ function returnToLobby(){
     }),function(data){
         location.href = `lobby.html?id=${id}&game=${game}`;
     });
+}
+
+// Check if game has returned to lobby
+function checkIfReturn(){
+    $.get(SERVERURL+"lobby?game="+game,
+    function(data){
+        // check for game start (no means that the game has returned to lobby)
+        if (data["start"] == "no"){
+            location.href = `lobby.html?id=${id}&game=${game}`;
+        }
+    }
+    )
 }
