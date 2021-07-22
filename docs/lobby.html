@@ -82,7 +82,7 @@ add AI players, start game once ready.
             it redirects the user to the game page.
             */
             function getPlayers(){
-                $.get(SERVERURL+"lobby?game="+game,
+                $.get(SERVERURL+"lobby?game="+game+"&id="+id,
                     function(data){
                         // clear the current player list
                         $("#players").html("");
@@ -95,6 +95,12 @@ add AI players, start game once ready.
                         // check for game start
                         if (data["start"] == "yes"){
                             location.href = `game.html?id=${id}&game=${game}`;
+                        }
+
+                        // check if player was kicked
+                        if (data["kicked"] == "yes"){
+                            alert("You have been kicked from game "+game);
+                            location.href = "index.html";
                         }
                     }
                 )

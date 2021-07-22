@@ -85,6 +85,9 @@ def joinGame():
 
     # Add player to game object
     if game_id in waiting_games:
+        # Check that player name is unique
+        if player_name in [waiting_games[game_id].state[i][0] for i in range(len(waiting_games[game_id].state))]:
+            return "error: player name already in use"
         waiting_games[game_id].state.append([player_name,player_id,[]])
     else:
         return "error: nonexistent game"
@@ -98,17 +101,30 @@ def joinGame():
 def lobby():
     # Get game ID
     game_id = request.args["game"]
+    try:
+        player_id = request.args["id"]
+    except:
+        print("warning: player id not supplied in call to /lobby")
+        player_id = False
 
     # Get player info
     if game_id in waiting_games: # If the game hasn't started yet, it will be in waiting_games.
+        # Determine if player has been kicked
+        kicked = "no"
+        if player_id:
+            if not (player_id in [waiting_games[game_id].state[i][1] for i in range(len(waiting_games[game_id].state))]):
+                kicked = "yes"
+        # Return data
         return jsonify({
             "players":waiting_games[game_id].players(),
-            "start":"no"
+            "start":"no",
+            "kicked":kicked
         })
     elif game_id in running_games: # If the game has started, it will be in running_games.
         return jsonify({
             "players":running_games[game_id].players(),
-            "start":"yes"
+            "start":"yes",
+            "kicked":"no"
         })
     else:
         return "error: nonexistent game"

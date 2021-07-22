@@ -90,7 +90,7 @@ td{
 
 #card-grid{
     display:grid;
-    grid-template-columns: repeat(auto-fill,minmax(10px,140px));
+    grid-template-columns: repeat(auto-fill,minmax(140px,0.7fr));
     gap:10px;
 }
 
