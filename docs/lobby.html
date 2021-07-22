@@ -27,7 +27,10 @@ add AI players, start game once ready.
             <h2 class=info>Waiting to start...</h2>
             <div class=box>
                 <h2>JOIN CODE: <span id="game-id"></span></h2>
-                <h2 class=info>Invite link: <a id="invite-link"></a></h2>
+                <div onclick="copyInvite()" style="cursor:pointer">
+                    <h2 class=info>Invite link (click to copy):</h2>
+                    <h3><a id="invite-link" target="_blank"></a></h3>
+                </div>
             </div>
             <div id=div-wrapper>
                 <div class=box>
@@ -112,6 +115,10 @@ add AI players, start game once ready.
                         alert(msg);
                     }
                 });
+            }
+            
+            function copyInvite(){
+                navigator.clipboard.writeText("https://knosmos.github.io/tres/join.html?game="+game);
             }
         </script>
     </body>
